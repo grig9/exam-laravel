@@ -23,16 +23,21 @@
     <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item ">
-          <a class="nav-link" href="#">Главная</a>
+          <a class="nav-link" href="{{ route('showUsers') }}">Главная</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Войти</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Выйти</a>
-        </li>
+        @guest
+          <li class="nav-item">
+            <a class="nav-link" href="#">Войти</a>
+          </li>
+        @endguest
+
+        @auth
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('logout') }}">Выйти</a>
+          </li>
+        @endauth
       </ul>
     </div>
   </nav>

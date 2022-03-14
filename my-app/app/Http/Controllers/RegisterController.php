@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-  public function register() 
+  public function register_form() 
   {
     return view('register_form');
   }
 
-  public function create(Request $request) {
+  public function register_user(Request $request) {
+
     $request->validate([
-        'name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
+        'password' => 'required|string|min:2',
     ]);
 
     User::create([
@@ -28,7 +28,7 @@ class RegisterController extends Controller
     ]);
 
     return redirect()
-        ->route('login_form')
-        ->with('success', 'Вы успешно зарегистрировались');
+        ->route('login')
+        ->with('success', 'Вы успешно зарегистрировались.');
 }
 }

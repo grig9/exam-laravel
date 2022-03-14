@@ -69,15 +69,22 @@ class HomeController extends Controller
         return redirect('/user');
     }
 
+    public function destroy($id)
+    {
+        User::find($id)->delete();
+        return redirect()->route('showUsers')
+                        ->with('success', 'User deleted successfuly');
+    }
+
     public function logout(Request $request)
-{
-    Auth::logout();
+    {
+        Auth::logout();
 
-    $request->session()->invalidate();
+        $request->session()->invalidate();
 
-    $request->session()->regenerateToken();
+        $request->session()->regenerateToken();
 
-    return redirect('/');
-}
+        return redirect('login_form');
+    }
 
 }

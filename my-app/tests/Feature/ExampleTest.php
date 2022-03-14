@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+
 class ExampleTest extends TestCase
 {
     /**
@@ -14,7 +15,7 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response()
     {
-        $response = $this->get('/');
+        $response = $this->get('/register_form');
 
         $response->assertStatus(200);
     }
@@ -22,7 +23,7 @@ class ExampleTest extends TestCase
     /** @test */
     public function users()
     {
-        $response = $this->get('/users');
+        $response = $this->get('users');
 
         $response->assertStatus(200);
     }
@@ -74,4 +75,6 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    
 }
