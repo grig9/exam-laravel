@@ -16,30 +16,40 @@ use App\Http\Controllers\HomeController;
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+
+// require __DIR__.'/auth.php';
+
 Route::controller(RegisterController::class)->group(function () {
-    Route::get('/', 'register_form')->name('register_form');
-    Route::post('/register', 'register')->name('register');
+    Route::get('register_form', 'register')->name('register');
+    Route::post('register', 'create');
 });
 
 Route::controller(LoginController::class)->group(function () {
-    Route::get('/login_form', 'login_form')->name('login_form');
-    Route::post('/login', 'login')->name('login');
+    Route::get('login_form', 'create');
+    Route::post('login', 'store')->name('login');
 });
 
 Route::controller(HomeController::class)->group(function () {
-    Route::get('/users', 'show_users');
-    Route::get('/user/{id}', 'show_user');
-    Route::get('/status/{id}', 'show_user_status');
-    Route::get('/security/{id}', 'show_user_security');
-    Route::get('/media/{id}', 'image_form');
-    Route::get('/edit_user/{id}', 'edit_form');
+    Route::get('users', 'show_users');
+    Route::get('user/{id}', 'show_user');
+    Route::get('status/{id}', 'show_user_status');
+    Route::get('security/{id}', 'show_user_security');
+    Route::get('media/{id}', 'image_form');
+    Route::get('edit_user/{id}', 'edit_form');
 
-    Route::get('/create_user_form', 'create_user_form');
-    Route::get('/create_user', 'create_user');
+    Route::get('create_user_form', 'create_user_form');
+    Route::get('create_user', 'create_user');
 });
 
 
 
-Route::get('/logout', [])->name('logout');
+Route::get('logout', [])->name('logout');
 
 

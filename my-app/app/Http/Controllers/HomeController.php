@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+
 
 class HomeController extends Controller
 {
     public function show_users()
     {
         $users = User::all();
-      
 
         return view('users', ['users' => $users]);
     }
@@ -19,6 +20,8 @@ class HomeController extends Controller
     {
         // get user
 
+        // $url = secure_asset('css/vendors.bundle.css');
+        
         $user = 'test';
 
         return view('profile_show', ['user' => $user]);
@@ -65,5 +68,16 @@ class HomeController extends Controller
         // $user = User::create()->fill($request->post());
         return redirect('/user');
     }
+
+    public function logout(Request $request)
+{
+    Auth::logout();
+
+    $request->session()->invalidate();
+
+    $request->session()->regenerateToken();
+
+    return redirect('/');
+}
 
 }
