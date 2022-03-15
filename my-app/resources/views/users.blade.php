@@ -25,9 +25,9 @@
     <div class="row">
         <div class="col-xl-12">
             @auth
-            @if(Auth::user()->is_admin)
-            <a class="btn btn-success" href="{{ route('admin.user.view') }}">Добавить</a>
-            @endif
+                @if(Auth::user()->is_admin)
+                <a class="btn btn-success" href="{{ route('admin.create.user.view') }}">Добавить</a>
+                @endif
             @endauth
 
             <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">

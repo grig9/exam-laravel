@@ -18,7 +18,7 @@
         </ul>
     </div>
     @endif
-    <form action="/admin/create/user" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.create.user') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-xl-6">
@@ -79,9 +79,11 @@
                             <div class="form-group">
                                 <label class="form-label" for="example-select">Выберите статус</label>
                                 <select class="form-control" name="status" id="example-select">
-                                    <option>Онлайн</option>
-                                    <option>Отошел</option>
-                                    <option>Не беспокоить</option>
+                                    @foreach($statuses as $key => $status)
+                                        <option value="{{ $key }}">
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 

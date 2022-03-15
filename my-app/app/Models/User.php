@@ -12,6 +12,19 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const STATUS_ONLINE = 0;
+    const STATUS_GET_AWAY = 1;
+    const STATUS_NOT_DISTURB = 2;
+
+    public static function getStatus()
+    {
+        return [
+            self::STATUS_ONLINE => 'Онлайн',
+            self::STATUS_GET_AWAY => 'Отошел',
+            self::STATUS_NOT_DISTURB => 'Не беспокоить',
+        ];
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +34,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
+
     ];
 
     /**

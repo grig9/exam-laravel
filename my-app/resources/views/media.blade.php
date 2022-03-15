@@ -9,6 +9,17 @@
             <i class='subheader-icon fal fa-image'></i> Загрузить аватар
         </h1>
     </div>
+    @if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        {{ $message }}
+    </div>
+    @endif
+
+    @if ($message = Session::get('error'))
+    <div class="alert alert-danger">
+        {{ $message }}
+    </div>
+    @endif
     <form action="/store/image" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">

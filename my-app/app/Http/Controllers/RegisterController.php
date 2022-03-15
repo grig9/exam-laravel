@@ -22,13 +22,12 @@ class RegisterController extends Controller
     ]);
 
     User::create([
-        'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request->password),
     ]);
 
     return redirect()
-        ->route('login')
+        ->route('login.form')
         ->with('success', 'Вы успешно зарегистрировались.');
 }
 }

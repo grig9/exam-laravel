@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name')->default('Anonymous');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('table')->nullable();
             $table->string('title')->nullable();
             $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->string('vk')->nullable();
             $table->string('telegram')->nullable();
             $table->string('instagram')->nullable();

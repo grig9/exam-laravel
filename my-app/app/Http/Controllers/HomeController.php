@@ -18,7 +18,7 @@ class HomeController extends Controller
         return view('users', ['users' => $users]);
     }
 
-    public function show_user($id)
+    public function showUser($id)
     {
         $user = User::find($id);
 
@@ -29,7 +29,22 @@ class HomeController extends Controller
     {
         $user = User::find($id);
 
-        return view('status', ['user' => $user]);
+        $status_list = User::getStatus();
+
+        return view('status', ['user' => $user, 'statuses' => $status_list]);
+    }
+
+    public function statusStore(Request $request)
+    {
+        User::where('id', $request->id)
+        ->update(
+            [
+                'status' => $request->status
+            ]
+        );
+
+    return redirect()->route('show.users')
+            ->with('success', 'Статус профиля успешно обновлен!');
     }
 
     public function show_user_security($id)
@@ -58,7 +73,8 @@ class HomeController extends Controller
                     'image' => $newFileName,
                 ]
             );
-        return redirect()->back();
+        return redirect()->back()
+                ->with('success', 'Аватар успешно обновлен!');
     }
 
     public function editForm($id)
@@ -86,10 +102,12 @@ class HomeController extends Controller
 
     public function createUserForm()
     {
-        return view('create_user_form');
+        $status_list = User::getStatus();
+
+        return view('create_user_form', ['statuses' => $status_list]);
     }
 
-    public function create_user(Request $request)
+    public function createUser(Request $request)
     {
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
@@ -100,6 +118,7 @@ class HomeController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'status' => $request->status,
         ]);
 
         return redirect()->route('show.users')
