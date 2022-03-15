@@ -38,18 +38,32 @@ Route::controller(LoginController::class)->group(function () {
 
 Route::middleware('auth')->group(function() {
     Route::controller(HomeController::class)->group(function () {
-        Route::get('users', 'show_users')->name('showUsers');
-        Route::get('user/{id}', 'show_user');
+        Route::get('users', 'show_users')->name('show.users');
+        Route::get('show/user/{id}', 'show_user');
         Route::get('status/{id}', 'show_user_status');
         Route::get('security/{id}', 'show_user_security');
-        Route::get('media/{id}', 'image_form');
-        Route::get('edit_user/{id}', 'edit_form');
-    
-        Route::get('create_user_form', 'create_user_form')->name('createUserForm');
-        Route::get('create_user', 'create_user');
+        Route::get('media/{id}', 'imageForm');
+        Route::post('store/image', 'storeImage');
+
+        Route::get('edit/user/{id}', 'editForm');
+        Route::post('update/user', 'updateUser');
+
+        Route::get('delete/user/{id}', 'destroyUser');
 
         Route::get('logout', 'logout')->name('logout');
     });
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/posts', function () {
+        echo "posts";
+    });
+});
+
+Route::group(['middleware' => ['auth', 'isadmin'], 'prefix' => 'admin', 'as' => 'admin.'], function()
+{
+    Route::get('/create/user/view', [HomeController::class,'createUserForm'])->name('user.view');
+    Route::post('/create/user', [HomeController::class,'create_user']);
 });
 
 

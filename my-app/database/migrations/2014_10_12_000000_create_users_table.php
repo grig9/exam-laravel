@@ -17,10 +17,18 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('image')->nullable();
+            $table->string('table')->nullable();
+            $table->string('title')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('vk')->nullable();
+            $table->string('telegram')->nullable();
+            $table->string('instagram')->nullable();
             $table->string('status')->nullable();
+            $table->boolean('is_admin')->default(0);
             $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }
