@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function() {
                 ->name('status.store');
 
         Route::get('security/{id}', 'show_user_security');
+        Route::post('user/security', 'securityStore')
+                ->name('security.user');
 
         Route::get('media/{id}', 'imageForm');
         Route::post('store/image', 'storeImage');

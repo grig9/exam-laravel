@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 
 class HomeController extends Controller
@@ -37,13 +38,13 @@ class HomeController extends Controller
     public function statusStore(Request $request)
     {
         User::where('id', $request->id)
-        ->update(
-            [
-                'status' => $request->status
-            ]
-        );
+            ->update(
+                [
+                    'status' => $request->status
+                ]
+            );
 
-    return redirect()->route('show.users')
+        return redirect()->route('show.users')
             ->with('success', 'Статус профиля успешно обновлен!');
     }
 
@@ -52,6 +53,27 @@ class HomeController extends Controller
         $user = User::find($id);
 
         return view('security', ['user' => $user]);
+    }
+
+    public function securityStore(Request $request)
+    {
+        $validate = Validate::check($request, [
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:5',
+            'password_confirm' => 'same:password',
+        ]);
+
+
+        User::where('id', $request->id)
+                ->update(
+                    [
+                        'email' => $request->email,
+                        'password' => $request->password,
+                    ]
+                );
+
+        return redirect()->route('show.users')
+                                ->with('error', 'В доступе отказано');
     }
 
     public function imageForm($id)
@@ -63,18 +85,20 @@ class HomeController extends Controller
 
     public function storeImage(Request $request)
     {
-        $image = $request->file('image');
+        $imageNameFromBd =  User::find($request->id)->only('image');
+        Storage::delete($imageNameFromBd);
 
-        $newFileName = $image->store('img/demo/avatars/');
+        $image = $request->file('image')
+                            ->store('img/demo/avatars/');
 
         User::where('id', $request->id)
             ->update(
                 [
-                    'image' => $newFileName,
+                    'image' => $image,
                 ]
             );
         return redirect()->back()
-                ->with('success', 'Аватар успешно обновлен!');
+            ->with('success', 'Аватар успешно обновлен!');
     }
 
     public function editForm($id)
@@ -97,7 +121,7 @@ class HomeController extends Controller
             );
 
         return redirect()->route('show.users')
-                ->with('success', 'Профиль успешно обновлен!');
+            ->with('success', 'Профиль успешно обновлен!');
     }
 
     public function createUserForm()
