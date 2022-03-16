@@ -15,12 +15,17 @@
     </div>
     @endif
 
-    @if ($message = Session::get('error'))
-    <div class="alert alert-danger">
-        {{ $message }}
+    @if ($errors->any())
+    <div class="alert alert-danger text-dark" role="alert">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
     @endif
-    <form action="/store/image" method="POST" enctype="multipart/form-data">
+
+    <form action="{{ route('user.store.image') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-xl-6">
@@ -32,7 +37,7 @@
                         <div class="panel-content">
                             <input type="hidden" name="id" value="{{ $user->id }}">
                             <div class="form-group">
-                                <img src="{{ asset($user->image )}}" alt="" class="img-responsive" width="200">
+                                <img src="{{ asset($user->image)}}" alt="" class="img-responsive" width="200">
                             </div>
 
                             <div class="form-group">

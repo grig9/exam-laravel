@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Gate;
+
 
 class HomeController extends Controller
 {
@@ -27,16 +29,24 @@ class HomeController extends Controller
     }
 
     public function show_user_status($id)
-    {
+    {   
+        if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Отказано в доступе');
+        }
+
         $user = User::find($id);
 
-        $status_list = User::getStatus();
+        $status_list = User::getStatuses();
 
         return view('status', ['user' => $user, 'statuses' => $status_list]);
     }
 
     public function statusStore(Request $request)
     {
+        if (!Gate::allows('edit-user', $request->id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Вы не можете редактировать других пользователей');
+        }
+
         User::where('id', $request->id)
             ->update(
                 [
@@ -50,6 +60,10 @@ class HomeController extends Controller
 
     public function show_user_security($id)
     {
+        if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Отказано в доступе');
+        }
+
         $user = User::find($id);
 
         return view('security', ['user' => $user]);
@@ -57,27 +71,33 @@ class HomeController extends Controller
 
     public function securityStore(Request $request)
     {
-        $validate = Validate::check($request, [
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:5',
-            'password_confirm' => 'same:password',
-        ]);
+        if (!Gate::allows('edit-user', $request->id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Вы не можете редактировать других пользователей');
+        }
 
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:1',
+            'password_confirmation' => 'same:password',
+        ]);
 
         User::where('id', $request->id)
                 ->update(
                     [
                         'email' => $request->email,
-                        'password' => $request->password,
+                        'password' => Hash::make($request->password),
                     ]
                 );
 
-        return redirect()->route('show.users')
-                                ->with('error', 'В доступе отказано');
+        return redirect()->route('show.users')->with('success', 'Профиль успешно обновлен');
     }
 
     public function imageForm($id)
     {
+        if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Отказано в доступе');
+        }
+
         $user = User::find($id);
 
         return view('media', ['user' => $user]);
@@ -85,6 +105,14 @@ class HomeController extends Controller
 
     public function storeImage(Request $request)
     {
+        if (!Gate::allows('edit-user', $request->id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Вы не можете редактировать других пользователей');
+        }
+        
+        $request->validate([
+            'image' => 'required|image',
+        ]);
+
         $imageNameFromBd =  User::find($request->id)->only('image');
         Storage::delete($imageNameFromBd);
 
@@ -102,7 +130,11 @@ class HomeController extends Controller
     }
 
     public function editForm($id)
-    {
+    {   
+        if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Отказано в доступе');
+        }
+
         $user = User::find($id);
 
         return view('edit_user', ['user' => $user]);
@@ -110,6 +142,10 @@ class HomeController extends Controller
 
     public function updateUser(Request $request)
     {
+        if (!Gate::allows('edit-user', $request->id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Вы не можете редактировать других пользователей');
+        }
+
         User::where('id', $request->id)
             ->update(
                 [
@@ -126,7 +162,7 @@ class HomeController extends Controller
 
     public function createUserForm()
     {
-        $status_list = User::getStatus();
+        $status_list = User::getStatuses();
 
         return view('create_user_form', ['statuses' => $status_list]);
     }
@@ -149,8 +185,12 @@ class HomeController extends Controller
             ->with('success', 'Пользователь успешно добавлен');
     }
 
-    public function destroyUser($id)
+    public function deleteUser($id)
     {
+        if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
+            return redirect()->route('show.users')->with('error', 'Отказано в доступе');
+        }
+
         User::find($id)->delete();
         return redirect()->route('show.users')
             ->with('success', 'Профиль успешно удален');

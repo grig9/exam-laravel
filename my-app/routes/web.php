@@ -45,24 +45,30 @@ Route::middleware('auth')->group(function() {
         Route::get('users', 'show_users')
                 ->name('show.users');
 
-        Route::get('show/user/{id}', 'showUser');
+        Route::get('show/user/{id}', 'showUser')
+                ->name('show.user');
 
-        Route::get('status/{id}', 'show_user_status');
+        Route::get('status/{id}', 'show_user_status')
+                ->name('show.user.status');
         Route::post('status/store', 'statusStore')
                 ->name('status.store');
 
-        Route::get('security/{id}', 'show_user_security');
+        Route::get('security/{id}', 'show_user_security')
+                ->name('show.user.security');
         Route::post('user/security', 'securityStore')
                 ->name('security.user');
 
-        Route::get('media/{id}', 'imageForm');
-        Route::post('store/image', 'storeImage');
+        Route::get('media/{id}', 'imageForm')
+                ->name('show.user.media');
+        Route::post('store/image', 'storeImage')
+                ->name('user.store.image');
         
-
-        Route::get('edit/user/{id}', 'editForm');
+        Route::get('edit/user/{id}', 'editForm')
+                ->name('show.user.edit');
         Route::post('update/user', 'updateUser');
 
-        Route::get('delete/user/{id}', 'destroyUser');
+        Route::get('delete/user/{id}', 'deleteUser')
+                ->name('delete.user');
 
         Route::get('logout', 'logout')
                 ->name('logout');

@@ -16,7 +16,7 @@ class User extends Authenticatable
     const STATUS_GET_AWAY = 1;
     const STATUS_NOT_DISTURB = 2;
 
-    public static function getStatus()
+    public static function getStatuses()
     {
         return [
             self::STATUS_ONLINE => 'Онлайн',
