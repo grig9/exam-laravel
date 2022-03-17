@@ -9,7 +9,7 @@
             <i class='subheader-icon fal fa-plus-circle'></i> Редактировать
         </h1>
     </div>
-    <form action="/update/user" method="POST">
+    <form action="{{ route('user.update') }}" method="POST">
         @csrf
         <div class="row">
             <div class="col-xl-6">

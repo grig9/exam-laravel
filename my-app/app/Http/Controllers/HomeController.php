@@ -125,7 +125,7 @@ class HomeController extends Controller
                     'image' => $image,
                 ]
             );
-        return redirect()->back()
+        return redirect()->route('show.users')
             ->with('success', 'Аватар успешно обновлен!');
     }
 
@@ -185,13 +185,17 @@ class HomeController extends Controller
             ->with('success', 'Пользователь успешно добавлен');
     }
 
-    public function deleteUser($id)
+    public function deleteUser(Request $request, $id)
     {
         if (!Gate::allows('edit-user', $id) and !request()->user()->is_admin) {
             return redirect()->route('show.users')->with('error', 'Отказано в доступе');
         }
 
         User::find($id)->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('show.users')
             ->with('success', 'Профиль успешно удален');
     }

@@ -51,8 +51,10 @@ class AuthTest extends TestCase
         $this->assertTrue($hasUser);
 
 
-        $response = $this->actingAs($user)->get('/users');
+        $this->actingAs($user)->get(route('show.users'));
               
+        $response = $this->actingAs($user)->get(route('show.user', ['id' => $user->id]));
 
+        $response->assertOk();
     }
 }

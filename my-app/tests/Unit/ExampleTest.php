@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class ExampleTest extends TestCase
 {
-    use WithoutMiddleware;
+    // use WithoutMiddleware;
     /**
      * A basic test example.
      *
@@ -31,6 +31,7 @@ class ExampleTest extends TestCase
         $response = $this->get(route('show.users'));
 
         $response->assertStatus(200);
+        $response->assertSee('Вы не авторизированы');
 
         $response->assertViewHas('users');
     }

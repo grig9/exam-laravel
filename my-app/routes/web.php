@@ -56,7 +56,8 @@ Route::middleware('auth')->group(function() {
         
         Route::get('edit/user/{id}', 'editForm')
                 ->name('show.user.edit');
-        Route::post('update/user', 'updateUser');
+        Route::post('update/user', 'updateUser')
+                ->name('user.update');
 
         Route::get('delete/user/{id}', 'deleteUser')
                 ->name('delete.user');
