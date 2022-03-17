@@ -6,6 +6,12 @@
 
 <main id="js-page-content" role="main" class="page-content mt-3">
 
+    @guest
+        <div class="alert alert-danger">
+            Вы не авторизированы
+        </div>
+    @endguest
+
     @if ($message = Session::get('success'))
     <div class="alert alert-success">
         {{ $message }}

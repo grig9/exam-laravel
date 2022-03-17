@@ -16,16 +16,6 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
-
-// require __DIR__.'/auth.php';
-
 Route::controller(RegisterController::class)->group(function () {
     Route::get('register_form', 'register_form')
             ->name('register.form');
@@ -40,11 +30,12 @@ Route::controller(LoginController::class)->group(function () {
             ->name('login');
 });
 
-Route::middleware('auth')->group(function() {
-    Route::controller(HomeController::class)->group(function () {
-        Route::get('users', 'show_users')
+Route::get('users', [HomeController::class, 'show_users'])
                 ->name('show.users');
 
+Route::middleware('auth')->group(function() {
+    Route::controller(HomeController::class)->group(function () {
+        
         Route::get('show/user/{id}', 'showUser')
                 ->name('show.user');
 

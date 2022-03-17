@@ -12,21 +12,14 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class AuthTest extends TestCase
 {
-    // use RefreshDatabase;
-    use WithoutMiddleware;
+    use RefreshDatabase;
     /**
      * A basic test example.
      *
      * @return void
      */
-    /** @test */
-    public function usersView()
-    {
-        $response = $this->get('users');
-
-        $response->assertStatus(200);
-    }
     
+    /** @test */
     public function registration()
     {
         $data = [
@@ -35,15 +28,31 @@ class AuthTest extends TestCase
             'password' => 'secret'
         ];
 
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        User::register($data);
 
         $this->assertDatabaseHas('users', [
             'name' => 'john',
             'email' => 'john@email.com'
         ]);
+    }
+
+    /** @test */
+    public function userLogin()
+    {
+        $data = [
+            'email' => 'john@email.com',
+            'password' => 'secret'
+        ];
+
+        $user = User::register($data);
+
+        $hasUser = $user ? true : false;
+
+        $this->assertTrue($hasUser);
+
+
+        $response = $this->actingAs($user)->get('/users');
+              
+
     }
 }
