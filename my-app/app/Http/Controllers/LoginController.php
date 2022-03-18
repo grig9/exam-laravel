@@ -19,7 +19,9 @@ class LoginController extends Controller
 
     if (Auth::attempt($credentials)) {
       $request->session()->regenerate();
-      return redirect()->route('show.users');
+      return redirect()
+              ->route('show.users')
+              ->with('success', 'Успешная авторизация');
     }
 
     return back()

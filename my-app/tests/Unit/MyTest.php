@@ -2,12 +2,13 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller\RegisterController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class MyTest extends TestCase
 {
@@ -20,12 +21,10 @@ class MyTest extends TestCase
      */
     public function test_show_user()
     {
-        $data = [
-            'email' => 'john@email.com',
-            'password' => 'secret'
-        ];
-
-        $user = User::register($data);
+        //регистрируем пользователя
+        $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);
               
         $response = $this->actingAs($user)->get(route('show.user', ['id' => $user->id]));
 
@@ -36,12 +35,10 @@ class MyTest extends TestCase
 
     public function test_show_user_edit()
     {
-        $data = [
-            'email' => 'john@email.com',
-            'password' => 'secret'
-        ];
-
-        $user = User::register($data);    
+         //регистрируем пользователя
+         $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);   
 
         $response = $this->actingAs($user)->get(route('show.user.edit',['id' => $user->id]));
 
@@ -52,12 +49,10 @@ class MyTest extends TestCase
 
     public function test_user_delete()
     {
-        $data = [
-            'email' => 'john@email.com',
-            'password' => 'secret'
-        ];
-
-        $user = User::register($data);    
+        //регистрируем пользователя
+        $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);   
 
         $response = $this->actingAs($user)->get(route('delete.user', ['id' => $user->id]));
 
@@ -66,19 +61,17 @@ class MyTest extends TestCase
         $response->assertSessionHas('success', 'Профиль успешно удален');
  
         $this->assertDatabaseMissing('users', [
-            'email' => $data['email'],
+            'email' => $user->email,
         ]);
 
     }
 
     public function test_user_logout()
     {
-        $data = [
-            'email' => 'john@email.com',
-            'password' => 'secret'
-        ];
-
-        $user = User::register($data);    
+         //регистрируем пользователя
+         $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);   
 
         $response = $this->actingAs($user)->get(route('logout'));
 

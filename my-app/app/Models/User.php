@@ -9,9 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
 
-class User extends Authenticatable
+class User extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable;
+    
 
     const STATUS_ONLINE = 0;
     const STATUS_GET_AWAY = 1;
@@ -51,6 +52,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'is_admin'
     ];
 
     /**
@@ -61,14 +63,5 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public static function register($data)
-    {
-        $user = new self;
-        $user->fill($data);
-        $user->password = bcrypt($data['password']);
-        $user->save();
-        return $user;
-    }
 
 }

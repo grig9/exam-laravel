@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use App\Http\Controllers\Controller\RegisterController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
@@ -20,18 +21,29 @@ class AuthTest extends TestCase
      */
     
     /** @test */
-    public function registration()
+    public function checkRegistrationValidation()
     {
-        $data = [
-            'name' => 'john',
+        $response = $this->post(route('register'), [
             'email' => 'john@email.com',
             'password' => 'secret'
-        ];
+        ]);
 
-        User::register($data);
+        $response->assertValid();
+        
+    }
+
+    /** @test */
+    public function checkRegistration()
+    {
+        $response = $this->post(route('register'), [
+            'email' => 'john@email.com',
+            'password' => 'secret'
+        ]);
+
+        $response->assertRedirect(route('login.form'));
+        $response->assertSessionHas('success', 'Вы успешно зарегистрировались.');
 
         $this->assertDatabaseHas('users', [
-            'name' => 'john',
             'email' => 'john@email.com'
         ]);
     }
@@ -39,22 +51,35 @@ class AuthTest extends TestCase
     /** @test */
     public function userLogin()
     {
-        $data = [
-            'email' => 'john@email.com',
+        //регистрируем пользователя
+        $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);
+        // login $user
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
             'password' => 'secret'
-        ];
+        ]);
 
-        $user = User::register($data);
+        $response->assertRedirect(route('show.users'));
+        $response->assertSessionHas('success', 'Успешная авторизация');
 
-        $hasUser = $user ? true : false;
+    }
 
-        $this->assertTrue($hasUser);
+    /** @test */
+    public function errorUserLogin()
+    {
+        //регистрируем пользователя
+        $user = User::factory()->create([
+            'password' => Hash::make('secret')
+        ]);
+        // login $user
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'false_password'
+        ]);
 
+        $response->assertSessionHas('error', 'The provided credentials do not match our records.');
 
-        $this->actingAs($user)->get(route('show.users'));
-              
-        $response = $this->actingAs($user)->get(route('show.user', ['id' => $user->id]));
-
-        $response->assertOk();
     }
 }

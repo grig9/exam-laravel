@@ -34,11 +34,6 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
-
-    // 'vk' => $this->faker->vk(),
-    //         'telegram' => $this->faker->telegram(),
-    //         'instagram' => $this->faker->instagram(),
-
     /**
      * Indicate that the model's email address should be unverified.
      *

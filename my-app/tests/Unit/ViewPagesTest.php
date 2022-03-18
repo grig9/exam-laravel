@@ -2,11 +2,10 @@
 
 namespace Tests\Unit;
 
-// use PHPUnit\Framework\TestCase;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-class ExampleTest extends TestCase
+class ViewPagesTest extends TestCase
 {
     // use WithoutMiddleware;
     /**
@@ -31,12 +30,8 @@ class ExampleTest extends TestCase
         $response = $this->get(route('show.users'));
 
         $response->assertStatus(200);
+
         $response->assertSee('Вы не авторизированы');
-
-        $response->assertViewHas('users');
     }
-
-    
-    
 
 }
